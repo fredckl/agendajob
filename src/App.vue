@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <header-top></header-top>
+    <header-top/>
     <navigation/>
     <div class="mt-4">
       <router-view></router-view>
