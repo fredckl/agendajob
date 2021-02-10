@@ -1,0 +1,37 @@
+<template>
+  <nav class="container mt-20 navigation">
+    <router-link 
+      v-for="(nav, index) in navigations"
+      :key="index"
+      :to="nav.to" 
+      tag="button" 
+      class="btn btn-sm mr-2"
+
+    >{{nav.label}}</router-link>
+  </nav>
+</template>
+
+<script>
+export default {
+  name: "navigation",
+  data: () => ({
+    navigations: [
+      {
+        to: '/',
+        label: 'Liste de mes candidatures'
+      },
+      {
+        to: '/create',
+        label: 'Ajouter une candidature'
+      },
+    ]
+  })
+}
+</script>
+
+<style lang="scss">
+
+.router-link-exact-active {
+  border-bottom: 1px solid #444 !important;
+}
+</style>
