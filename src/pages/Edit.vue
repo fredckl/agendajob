@@ -6,7 +6,7 @@
           <h1>Nouvelle candidature</h1>
         </div>
       </div>
-      <form-job :form="form" :onSubmit="onSubmit"/>
+      <form-job :job="job" @onSubmit="onSubmit"/>
     </div>
   </div>
 </template>
@@ -14,7 +14,6 @@
 <script>
 import { FormJob } from '../components';
 import { setItemStringify, getItemParsed } from '../helpers';
-import { v4 as uuidv4 } from 'uuid';
 import toastr from 'toastr';
 export default {
   name: 'edit',
@@ -22,32 +21,13 @@ export default {
     FormJob 
   },
   data: () => ({
-    form: {
-      company: null,
-      date: new Date(),
-      url: null,
-      id: uuidv4()
-    }
+    job: {}
   }),
   methods: {
-    resetFields () {
-      this.form = {
-        company: null,
-        date: new Date(),
-        url: null,
-        id: uuidv4()
-      }
-    },
-    onSubmit () {
+    onSubmit (newJob) {
       const jobs = getItemParsed('jobs', '[]');
-      const newJobs = jobs.map((job) => {
-        if (job.id === this.form.id) {
-          return this.form;
-        }
-        return job;
-      })
+      const newJobs = jobs.map((job) => job.id === newJob.id ? newJob : job)
       setItemStringify('jobs', newJobs);
-      this.resetFields()
       toastr.success('vos modifications ont bien été enregistrées!', 'Yeah!!');
       this.$router.push('/');
     }
@@ -55,7 +35,7 @@ export default {
   beforeMount () {
     const jobId = this.$route.params.id;
     const jobs = getItemParsed('jobs');
-    this.form = jobs.find(({id}) => jobId === id)
+    this.job = jobs.find(({id}) => jobId === id)
   }
 }
 </script>

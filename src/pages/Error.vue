@@ -1,6 +1,12 @@
 <template>
   <div class="container">
-    Error
+    <div>
+      <p>
+        Oups ! Une erreur est survenue.
+        <br/>
+        <router-link to="/">retourner à la page d'accueil</router-link>
+      </p>
+    </div>
   </div>
 </template>
 

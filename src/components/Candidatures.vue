@@ -7,40 +7,48 @@
         </router-link>
       </div>
     </div>
-    <div 
-      v-for="job in jobs"
-      :key="job.id"
-      class="card">
-      <div class="card-header">{{job.company}}</div>
-      <div class="card-body d-flex justify-content-center align-items-center">
-        <a v-if="job.url" :href="job.url" class="text-muted">{{job.url}}</a>
-      </div>
-      <div class="card-footer">
-        <div class="d-flex justify-content-center align-items-center actions">
-            <router-link :to="`/edit/${job.id}`">
-              <b-icon icon="pencil"></b-icon>
-            </router-link>
-            <a href="#remove" @click.prevent="removeJob(job.id)"><b-icon icon="trash"></b-icon></a>
-        </div>
-      </div>
-    </div>
+    
+    <candidature 
+      v-for="job in jobs" 
+      :key="job.id" 
+      :job="job"
+      @onRemove="confirmRemove"
+    />
+    <confirm 
+      msg="Etes-vous certain de vouloir supprimer cette candidature" 
+      @onOk="removeJob"
+      @onClose="closeModal"/>
   </div>
 </template>
 
 <script>
 import moment from "moment";
 import { getItemParsed, setItemStringify } from '../helpers';
+import Candidature  from './Candidature.vue'
+import Confirm from './Confirm.vue';
 export default {
-  name: 'candidature',
+  name: 'candidatures',
+  components: {
+    Candidature,
+    Confirm
+  },
   data () {
     return {
-      jobs: []
+      jobs: [],
+      resetId: null
     }
   },
   methods: {
-    removeJob (jobId) {
-      this.jobs = this.jobs.filter(({id}) => id !== jobId)
+    confirmRemove (jobId) {
+      this.resetId = jobId;
+      this.$bvModal.show('confirm');
+    },
+    removeJob () {
+      this.jobs = this.jobs.filter(({id}) => id !== this.resetId)
       setItemStringify('jobs', this.jobs);
+    },
+    closeModal () {
+      this.resetId = null;
     }
   },
   computed: {
@@ -55,17 +63,6 @@ export default {
 </script>
 
 <style lang="scss">
-.card {
-  height: 300px;
-  overflow: auto;
-  width: 15rem;
-  margin-right: 1rem;
-  margin-bottom: 1rem;
-  a {
-    color: inherit;
-    // color: #c2c2c2;
-  }
-}
 .card-add {
   .icon-add {
     font-size: 7rem;
@@ -75,11 +72,4 @@ export default {
     color: #c2c2c2;
   } 
 }
-.actions {
-  a {
-    margin-right: 10px;
-    margin-left: 10px;
-  }
-}
-
 </style>
