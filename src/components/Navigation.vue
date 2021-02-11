@@ -18,7 +18,7 @@ export default {
     navigations: [
       {
         to: '/',
-        label: 'Liste de mes candidatures'
+        label: 'Mes candidatures'
       },
       {
         to: '/create',
