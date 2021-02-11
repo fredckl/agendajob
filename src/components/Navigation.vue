@@ -24,6 +24,10 @@ export default {
         to: '/create',
         label: 'Ajouter une candidature'
       },
+      {
+        to: '/manage-data',
+        label: 'Gérer mes données'
+      },
     ]
   })
 }
