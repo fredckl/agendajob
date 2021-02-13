@@ -74,7 +74,7 @@ export default {
   },
   methods: {
     onSubmit () {
-      this.$emit('onSubmit', this.form)
+      this.$emit('onSubmit', {...this.form, date: moment(this.form.date).format('X')})
     },
     resetFields () {
       this.form = getDefaultValue();
