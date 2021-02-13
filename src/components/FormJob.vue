@@ -55,19 +55,21 @@
 <script>
 import { v4 as uuidv4 } from 'uuid';
 import moment from 'moment';
+
+const getDefaultValue = () => ({
+  company: null,
+  date: moment().format('YYYY-MM-DD'),
+  note: null,
+  url: null,
+  color: null,
+  id: uuidv4()
+})
 export default {
   name: 'form-job',
   props: ['job'],
   data () {
     return {
-      form: {
-        company: null,
-        date: moment().format('YYYY-MM-DD'),
-        note: null,
-        url: null,
-        color: null,
-        id: uuidv4()
-      }
+      form: getDefaultValue()
     }
   },
   methods: {
@@ -75,12 +77,7 @@ export default {
       this.$emit('onSubmit', this.form)
     },
     resetFields () {
-      this.form = {
-        company: null,
-        date: new Date(),
-        url: null,
-        id: uuidv4()
-      }
+      this.form = getDefaultValue();
     },
   },
   beforeMount () {
