@@ -28,7 +28,6 @@ export default {
   props: ['job'],
   computed: {
     candidatureDate () {
-      console.log(this.job.date);
       return moment(this.job.date).format('DD/MM/YYYY');
     },
     color () {
