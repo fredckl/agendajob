@@ -2,39 +2,48 @@
   <form @submit.stop.prevent="onSubmit" method="post" clas="needs-validation" novalidate>
     <div class="row mb-3">
       <div class="col-6">
-        <label for="company" class="form-label">Nom de la société</label>
-        <input 
-          type="text" 
-          class="form-control" 
-          v-model.trim="form.company" 
-          id="company" 
-          placeholder="Helvetica partners" 
-        />
-        <div v-if="!$v.company.required">Ce champ est obligatoire</div>
+        <div class="form-group">
+          <label for="company" class="form-label">Nom de la société</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            v-model.trim="form.company" 
+            id="company" 
+            placeholder="Helvetica partners" 
+            :class="{ 'is-invalid': submitted && $v.company.$error }"
+          />
+          <div v-if="submitted && !$v.company.required" class="invalid-feedback">Ce champ est obligatoire</div>
+        </div>
       </div>
       <div class="col-6">
-        <label for="company" class="form-label">Site internet</label>
-        <input 
-          type="text" 
-          class="form-control" 
-          id="company" 
-          v-model.trim="form.url"
-          placeholder="https://www.helvetica-partners.com/fr/"
-        />
+        <div class="form-group">
+          <label for="company" class="form-label">Site internet</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="company" 
+            v-model.trim="form.url"
+            placeholder="https://www.helvetica-partners.com/fr/"
+          />
+        </div>
       </div>
     </div>
     <div class="row mb-3">
       <div class="col-6">
-        <label for="note" class="form-label">Note personnelle</label>
-        <textarea v-model="form.note" id="note" class="form-control"></textarea>
+        <div class="form-group">
+          <label for="note" class="form-label">Note personnelle</label>
+          <textarea v-model="form.note" id="note" class="form-control"></textarea>
+        </div>
       </div>
       <div class="col-6">
-        <label for="date" class="form-label">Date de l'offre</label>
-        <b-form-datepicker 
-          id="date" 
-          v-model="form.date" 
-          class="mb-2"
-        ></b-form-datepicker>
+        <div class="form-group">
+          <label for="date" class="form-label">Date de l'offre</label>
+          <b-form-datepicker 
+            id="date" 
+            v-model="form.date" 
+            class="mb-2"
+          ></b-form-datepicker>
+        </div>
       </div>
     </div>
     <div class="row mb-3">
@@ -63,7 +72,7 @@ const getDefaultValue = () => ({
   date: moment().format('YYYY-MM-DD'),
   note: null,
   url: null,
-  color: null,
+  color: 'rgba(0, 0, 0, 0.125)',
   id: uuidv4()
 })
 export default {
@@ -71,6 +80,7 @@ export default {
   props: ['job'],
   data () {
     return {
+      submitted: false,
       form: getDefaultValue()
     }
   },
@@ -80,7 +90,12 @@ export default {
     }
   },
   methods: {
+    validateState(item) {
+      const { $dirty, $error } = item
+      return $dirty ? !$error : null
+    },
     onSubmit () {
+      this.submitted = true;
       this.$v.$touch()
       if (!this.$v.$invalid) {
         this.$emit('onSubmit', {...this.form, date: moment(this.form.date).format('X')})
