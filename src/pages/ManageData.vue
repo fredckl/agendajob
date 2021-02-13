@@ -21,8 +21,8 @@
           <button type="button" class="btn btn-warning" @click="exportData" role="button">Sauvegarder mes données</button>
         </div>
         <div class="col-6 text-center">
-          <button type="button" class="btn btn-warning" disabled @click="importData" role="button">Importer mes données</button>
-          <p class="text-muted">Cette fonctionnalité est en cours de développement, merci de revenir plus tard 😀.</p>
+          <button type="button" class="btn btn-warning" @click="selectFile" role="button">Importer mes données</button>
+          <input type="file" id="import-data" @change="importData" class="d-none"/>
         </div>
       </div>
     </div>
@@ -30,7 +30,16 @@
 </template>
 
 <script>
-import { getItem } from '../helpers'
+import { getItem, getItemParsed, setItemStringify } from '../helpers'
+import toastr from 'toastr';
+import Ajv from 'ajv'
+import { jobs as jobsSchema } from '../validator/jobs';
+import { filter, propEq, find, isEmpty } from 'rambda';
+
+const ajv = new Ajv();
+const validate = ajv.compile(jobsSchema);
+const ACCEPT_FILE_TYPE = 'application/json';
+
 export default {
   name: 'manage-content',
   methods: {
@@ -46,12 +55,38 @@ export default {
       element.click();
 
       document.body.removeChild(element);
-      
-      console.log('export data')
     },
+    selectFile () {
+      document.querySelector('#import-data').click();
+    },
+    importData (event) {
+      const file = event.target.files[0];
+      const toastrError = () => toastr.error('Le fichier n\'est pas valide', 'Erreur de fichier');
+      if (file.type !== ACCEPT_FILE_TYPE) {
+        toastrError();
+        return;
+      }
 
-    importData () {
-      console.log('import data')
+      const reader = new FileReader();
+      reader.addEventListener('load', (event) => {
+        const data = JSON.parse(event.target.result);
+
+        if (!validate(data)) {
+          toastrError();
+          return;
+        }
+        
+        const actualData = getItemParsed('jobs', '[]');
+        const onlyNotExistsData = filter(({id}) => !find(propEq('id', id))(actualData))(data);
+        if (isEmpty(onlyNotExistsData)) {
+          toastr.info('Aucune nouvelle donnée n\'a été importée', 'Importation');
+          return;
+        }
+
+        setItemStringify('jobs', [...actualData, ...onlyNotExistsData])
+        toastr.success('Vos données ont correctement été importées', 'Importation')
+      })
+      reader.readAsText(file);
     }
 
   }

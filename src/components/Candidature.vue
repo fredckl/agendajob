@@ -22,13 +22,15 @@
 
 <script>
 import moment from 'moment';
+import { DATE_FR } from '../constants';
+import { timestampToDate } from '../helpers';
 
 export default {
   name: "candidature",
   props: ['job'],
   computed: {
     candidatureDate () {
-      return moment(this.job.date).format('DD/MM/YYYY');
+      return moment(timestampToDate(this.job.date)).format(DATE_FR);
     },
     color () {
       return this.job.color
