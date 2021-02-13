@@ -1,15 +1,16 @@
 <template>  
-  <form @submit.prevent="onSubmit" method="post">
+  <form @submit.stop.prevent="onSubmit" method="post" clas="needs-validation" novalidate>
     <div class="row mb-3">
       <div class="col-6">
         <label for="company" class="form-label">Nom de la société</label>
         <input 
           type="text" 
           class="form-control" 
-          v-model="form.company" 
+          v-model.trim="form.company" 
           id="company" 
           placeholder="Helvetica partners" 
         />
+        <div v-if="!$v.company.required">Ce champ est obligatoire</div>
       </div>
       <div class="col-6">
         <label for="company" class="form-label">Site internet</label>
@@ -17,7 +18,7 @@
           type="text" 
           class="form-control" 
           id="company" 
-          v-model="form.url"
+          v-model.trim="form.url"
           placeholder="https://www.helvetica-partners.com/fr/"
         />
       </div>
@@ -53,6 +54,7 @@
 </template>
 
 <script>
+import { required } from 'vuelidate/lib/validators';
 import { v4 as uuidv4 } from 'uuid';
 import moment from 'moment';
 
@@ -72,9 +74,17 @@ export default {
       form: getDefaultValue()
     }
   },
+  validations: {
+    company: {
+      required
+    }
+  },
   methods: {
     onSubmit () {
-      this.$emit('onSubmit', {...this.form, date: moment(this.form.date).format('X')})
+      this.$v.$touch()
+      if (!this.$v.$invalid) {
+        this.$emit('onSubmit', {...this.form, date: moment(this.form.date).format('X')})
+      }
     },
     resetFields () {
       this.form = getDefaultValue();

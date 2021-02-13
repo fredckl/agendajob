@@ -3,7 +3,8 @@ import App from './App.vue'
 import { BootstrapVue, IconsPlugin, BootstrapVueIcons } from 'bootstrap-vue'
 import './scss/app.scss';
 import VueRouter from 'vue-router'
-import { routes } from './routes';
+import Vuelidate from 'vuelidate'
+import { routes } from './routes'
 import InputColorPicker from "vue-native-color-picker";
 
 Vue.config.productionTip = false
@@ -11,7 +12,8 @@ Vue.config.productionTip = false
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 Vue.use(BootstrapVueIcons)
-Vue.use(InputColorPicker);
+Vue.use(InputColorPicker)
+Vue.use(Vuelidate)
 Vue.use(VueRouter)
 
 const router = new VueRouter({
