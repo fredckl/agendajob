@@ -54,6 +54,7 @@
 
 <script>
 import { v4 as uuidv4 } from 'uuid';
+import moment from 'moment';
 export default {
   name: 'form-job',
   props: ['job'],
@@ -61,7 +62,7 @@ export default {
     return {
       form: {
         company: null,
-        date: new Date(),
+        date: moment().format('YYYY-MM-DD'),
         note: null,
         url: null,
         color: null,

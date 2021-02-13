@@ -26,6 +26,7 @@ import moment from "moment";
 import { getItemParsed, setItemStringify } from '../helpers';
 import Candidature  from './Candidature.vue'
 import Confirm from './Confirm.vue';
+import { sortBy, prop, reverse, compose } from 'rambda';
 export default {
   name: 'candidatures',
   components: {
@@ -57,7 +58,10 @@ export default {
     }
   },
   beforeMount () {
-    this.jobs = getItemParsed('jobs', '[]');
+    this.jobs = compose(
+      reverse,
+      sortBy(prop('date'))
+    )(getItemParsed('jobs', '[]'));
   }
 }
 </script>
