@@ -70,8 +70,13 @@
 <script>
 import { required, url } from 'vuelidate/lib/validators';
 import { v4 as uuidv4 } from 'uuid';
+import toastr from 'toastr';
 import moment from 'moment';
 import { COLOR_DEFAULT } from '../constants';
+import Ajv from 'ajv'
+import { job as jobSchema } from '../validator/jobs';
+const ajv = new Ajv();
+const validate = ajv.compile(jobSchema);
 
 const getDefaultValue = () => ({
   company: null,
@@ -111,7 +116,12 @@ export default {
       if (this.$v.$invalid) {
         return false;
       }
-      this.$emit('onSubmit', {...this.form, date: moment(this.form.date).format('X')})
+      const formData = {...this.form, date: moment(this.form.date).format('X')}
+      if (!validate(formData)) {
+        toastr.error('Veuillez vérifier vos données saisies', 'Erreur de validation')
+        return
+      }
+      this.$emit('onSubmit', formData)
     },
     resetFields () {
       this.form = getDefaultValue();
