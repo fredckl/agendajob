@@ -1,7 +1,7 @@
 <template>
-  <div class="card" :style="{borderColor: color}">
+  <div class="card" :style="{borderColor: color }">
     <div class="card-header d-flex flex-column">
-      <div class="truncate" :style="{color: color}">{{job.company}}</div>
+      <div class="truncate">{{job.company}}</div>
       <div class="text-right font-weight-light text-muted"><small>{{candidatureDate}}</small></div>
     </div>
     <div class="card-body">
@@ -22,12 +22,17 @@
 
 <script>
 import moment from 'moment';
-import { DATE_FR } from '../constants';
+import { COLOR_DEFAULT, DATE_FR } from '../constants';
 import { timestampToDate } from '../helpers';
 
 export default {
   name: "candidature",
   props: ['job'],
+  data () {
+    return {
+      defaultColor: COLOR_DEFAULT
+    }
+  },  
   computed: {
     candidatureDate () {
       return moment(timestampToDate(this.job.date)).format(DATE_FR);

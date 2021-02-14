@@ -7,7 +7,7 @@ import Vuelidate from 'vuelidate'
 import { routes } from './routes'
 import InputColorPicker from "vue-native-color-picker";
 
-Vue.config.productionTip = false
+Vue.config.productionTip = process.env.NODE_ENV === 'production'
 
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
