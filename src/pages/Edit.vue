@@ -13,7 +13,7 @@
 
 <script>
 import { FormJob } from '../components';
-import { setItemStringify, getItemParsed } from '../helpers';
+import { setStringifyItem, getParsedItem, timestampToDate } from '../helpers';
 import toastr from 'toastr';
 export default {
   name: 'edit',
@@ -25,17 +25,18 @@ export default {
   }),
   methods: {
     onSubmit (newJob) {
-      const jobs = getItemParsed('jobs', '[]');
+      const jobs = getParsedItem('jobs', []);
       const newJobs = jobs.map((job) => job.id === newJob.id ? newJob : job)
-      setItemStringify('jobs', newJobs);
+      setStringifyItem('jobs', newJobs);
       toastr.success('vos modifications ont bien été enregistrées!', 'Yeah!!');
       this.$router.push('/');
     }
   },
   beforeMount () {
     const jobId = this.$route.params.id;
-    const jobs = getItemParsed('jobs');
-    this.job = jobs.find(({id}) => jobId === id)
+    const jobs = getParsedItem('jobs');
+    const job = jobs.find(({id}) => jobId === id);
+    this.job = {...job, date: timestampToDate(job.date)}
   }
 }
 </script>

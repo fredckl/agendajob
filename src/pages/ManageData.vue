@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { getItem, getItemParsed, setItemStringify } from '../helpers'
+import { getItem, getParsedItem, setStringifyItem } from '../helpers'
 import toastr from 'toastr';
 import Ajv from 'ajv'
 import { jobs as jobsSchema } from '../validator/jobs';
@@ -76,14 +76,14 @@ export default {
           return;
         }
         
-        const actualData = getItemParsed('jobs', '[]');
+        const actualData = getParsedItem('jobs', []);
         const onlyNotExistsData = filter(({id}) => !find(propEq('id', id))(actualData))(data);
         if (isEmpty(onlyNotExistsData)) {
           toastr.info('Aucune nouvelle donnée n\'a été importée', 'Importation');
           return;
         }
 
-        setItemStringify('jobs', [...actualData, ...onlyNotExistsData])
+        setStringifyItem('jobs', [...actualData, ...onlyNotExistsData])
         toastr.success('Vos données ont correctement été importées', 'Importation')
       })
       reader.readAsText(file);

@@ -23,7 +23,7 @@
 
 <script>
 import moment from "moment";
-import { getItemParsed, setItemStringify } from '../helpers';
+import { getParsedItem, setStringifyItem } from '../helpers';
 import Candidature  from './Candidature.vue'
 import Confirm from './Confirm.vue';
 import { sortBy, prop, reverse, compose } from 'rambda';
@@ -47,7 +47,7 @@ export default {
     },
     removeJob () {
       this.jobs = this.jobs.filter(({id}) => id !== this.resetId)
-      setItemStringify('jobs', this.jobs);
+      setStringifyItem('jobs', this.jobs);
     },
     closeModal () {
       this.resetId = null;
@@ -62,7 +62,7 @@ export default {
     this.jobs = compose(
       reverse,
       sortBy(prop('date'))
-    )(getItemParsed('jobs', '[]'));
+    )(getParsedItem('jobs', []));
   }
 }
 </script>
