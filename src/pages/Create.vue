@@ -13,7 +13,7 @@
 
 <script>
 import { FormJob } from '../components';
-import { setItemStringify, getItemParsed } from '../helpers';
+import { setStringifyItem, getParsedItem } from '../helpers';
 import toastr from 'toastr';
 export default {
   name: 'create',
@@ -22,9 +22,9 @@ export default {
   },
   methods: {
     onSubmit (job) {
-      const jobs = getItemParsed('jobs', '[]');
+      const jobs = getParsedItem('jobs', []);
       jobs.unshift(job);
-      setItemStringify('jobs', jobs);
+      setStringifyItem('jobs', jobs);
       toastr.success('votre nouvelle candidature a bien été enregistrée!', 'Yeah!!');
       this.$router.push('/');
     }
