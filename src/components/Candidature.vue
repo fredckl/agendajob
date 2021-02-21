@@ -1,12 +1,12 @@
 <template>
-  <div class="card" :style="{borderColor: color }">
+  <div class="card" :style="styled">
     <div class="card-header d-flex flex-column">
       <div class="truncate">{{job.company}}</div>
       <div class="text-right font-weight-light text-muted"><small>{{candidatureDate}}</small></div>
     </div>
     <div class="card-body">
       <p>{{job.note}}</p>
-      <a v-if="job.url" :href="job.url" class="text-muted">{{job.url}}</a>
+      <a v-if="job.url" :href="job.url" class="text-muted" target="_blank">{{job.url}}</a>
     </div>
     <div class="card-footer">
       <div class="d-flex justify-content-center align-items-center actions">
@@ -16,7 +16,6 @@
           <a href="#remove" @click.prevent="$emit('onRemove', job.id)"><b-icon icon="trash"></b-icon></a>
       </div>
     </div>
-    
   </div>
 </template>
 
@@ -37,8 +36,11 @@ export default {
     candidatureDate () {
       return moment(timestampToDate(this.job.date)).format(DATE_FR);
     },
-    color () {
-      return this.job.color
+    styled () {
+      return {
+        borderColor: this.job.color,
+        boxShadow: `0 0 4px ${this.job.color}`
+      }
     }
   }
 }
