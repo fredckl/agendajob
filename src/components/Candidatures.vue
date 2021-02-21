@@ -29,14 +29,12 @@
 
 <script>
 import moment from "moment";
-import { getParsedItem, setStringifyItem } from '../helpers';
+import { setStringifyItem } from '../helpers';
 import Candidature  from './Candidature.vue'
 import SearchCandidatures  from './SearchCandidatures.vue'
 import Confirm from './Confirm.vue';
 import {
-    sortBy,
-    prop,
-    reverse,
+    
     compose,
     filter,
     includes,
@@ -57,11 +55,13 @@ export default {
     SearchCandidatures,
     Confirm
   },
+  props: {
+    jobs: Array
+  },
   data () {
     return {
-      jobs: [],
       isSearched: false,
-      originalJobs: [],
+      allJobs: this.jobs,
       resetId: null
     }
   },
@@ -80,7 +80,7 @@ export default {
     onSearch (query) {
       if (isEmpty(query)) {
         this.$set(this, 'isSearched', false);
-        this.$set(this, 'jobs', this.originalJobs);
+        this.$set(this, 'allJobs', this.jobs);
         return;
       }
       const prepareQuery = compose(
@@ -97,7 +97,7 @@ export default {
           paths([['company'], ['note']])
         ))(this.originalJobs)
 
-      this.$set(this, 'jobs', jobsFiltered);
+      this.$set(this, 'allJobs', jobsFiltered);
       this.$set(this, 'isSearched', true);
     }
   },
@@ -105,13 +105,6 @@ export default {
     addedAt () {
       return moment(this.job.date).format(DATE_FR)
     }
-  },
-  beforeMount () {
-    this.jobs = compose(
-      reverse,
-      sortBy(prop('date'))
-    )(getParsedItem('jobs', []));
-    this.originalJobs = this.jobs;
   }
 }
 </script>
