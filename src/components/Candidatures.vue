@@ -1,23 +1,29 @@
 <template>
-  <div class="d-flex flex-wrap"> 
-    <div class="card card-add">
-      <div class="card-body d-flex justify-content-center align-items-center">
-        <router-link class="rounded-circle icon-add" to="/create">
-          <b-icon icon="plus-circle"></b-icon>
-        </router-link>
+  <div>
+    <div class="row mb-3">
+      <div class="col">
+        <search-candidatures @onSearch="onSearch"/>
       </div>
     </div>
-    
-    <candidature 
-      v-for="job in jobs" 
-      :key="job.id" 
-      :job="job"
-      @onRemove="confirmRemove"
-    />
-    <confirm 
-      msg="Etes-vous certain de vouloir supprimer cette candidature" 
-      @onOk="removeJob"
-      @onClose="closeModal"/>
+    <div class="d-flex flex-wrap"> 
+      <div v-if="!isSearched" class="card card-add">
+        <div class="card-body d-flex justify-content-center align-items-center">
+          <router-link class="rounded-circle icon-add" to="/create">
+            <b-icon icon="plus-circle"></b-icon>
+          </router-link>
+        </div>
+      </div>
+      <candidature 
+        v-for="job in jobs" 
+        :key="job.id" 
+        :job="job"
+        @onRemove="confirmRemove"
+      />
+      <confirm 
+        msg="Etes-vous certain de vouloir supprimer cette candidature" 
+        @onOk="removeJob"
+        @onClose="closeModal"/>
+    </div>
   </div>
 </template>
 
@@ -25,18 +31,37 @@
 import moment from "moment";
 import { getParsedItem, setStringifyItem } from '../helpers';
 import Candidature  from './Candidature.vue'
+import SearchCandidatures  from './SearchCandidatures.vue'
 import Confirm from './Confirm.vue';
-import { sortBy, prop, reverse, compose } from 'rambda';
+import {
+    sortBy,
+    prop,
+    reverse,
+    compose,
+    filter,
+    includes,
+    isEmpty,
+    toLower,
+    paths,
+    join
+} from 'rambda';
 import { DATE_FR } from '../constants';
+import S from "string";
+
+const toLatinise = value => S(value).latinise().s;
+
 export default {
   name: 'candidatures',
   components: {
     Candidature,
+    SearchCandidatures,
     Confirm
   },
   data () {
     return {
       jobs: [],
+      isSearched: false,
+      originalJobs: [],
       resetId: null
     }
   },
@@ -51,6 +76,29 @@ export default {
     },
     closeModal () {
       this.resetId = null;
+    },
+    onSearch (query) {
+      if (isEmpty(query)) {
+        this.$set(this, 'isSearched', false);
+        this.$set(this, 'jobs', this.originalJobs);
+        return;
+      }
+      const prepareQuery = compose(
+        toLatinise,
+        toLower
+      )(query)
+
+      const jobsFiltered = filter(
+        compose(
+          includes(prepareQuery), 
+          toLower, 
+          toLatinise,
+          join(' '),
+          paths([['company'], ['note']])
+        ))(this.originalJobs)
+
+      this.$set(this, 'jobs', jobsFiltered);
+      this.$set(this, 'isSearched', true);
     }
   },
   computed: {
@@ -63,11 +111,15 @@ export default {
       reverse,
       sortBy(prop('date'))
     )(getParsedItem('jobs', []));
+    this.originalJobs = this.jobs;
   }
 }
 </script>
 
 <style lang="scss">
+.card-body {
+  overflow: scroll
+}
 .card-add {
   .icon-add {
     font-size: 7rem;
