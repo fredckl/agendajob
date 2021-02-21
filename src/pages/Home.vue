@@ -1,11 +1,8 @@
-
 <template>
-
   <div class="container mb-4">
     <h1>Mes candidatures</h1>  
     <candidatures/>
   </div>
-
 </template>
 
 <script>
