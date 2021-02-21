@@ -1,9 +1,11 @@
 <template>
-  <div id="app">
+  <div id="app" class="mb-5">
     <header-top/>
     <navigation/>
     <div class="mt-4">
-      <router-view></router-view>
+      <transition name="show">
+        <router-view></router-view>
+      </transition>
     </div>
   </div>
 </template>
@@ -20,7 +22,21 @@ export default {
 </script>
 
 <style>
-  #app {
-    margin-top: 100px;
-  }
+#app {
+  margin-top: 100px;
+}
+.show-leave-enter {
+  opacity: 0;
+}
+.show-enter-active,
+.show-leave-enter {
+    transform: translateX(0);
+    transition: all .3s ease-out;
+    
+}
+.show-enter,
+.show-leave-to {
+    transform: translateX(10%);
+    opacity: 1;
+}
 </style>
