@@ -3,11 +3,11 @@
     <router-link 
       v-for="(nav, index) in navigations"
       :key="index"
-      :to="nav.to" 
-      tag="button" 
+      :to="nav.to"
       class="btn btn-sm mr-2"
-
-    >{{nav.label}}</router-link>
+    >
+      {{nav.label}}
+    </router-link>
   </nav>
 </template>
 
@@ -34,8 +34,12 @@ export default {
 </script>
 
 <style lang="scss">
-
+.navigation {
+  .btn {
+    border-radius: 0;
+  }
+}
 .router-link-exact-active {
-  border-bottom: 1px solid #444 !important;
+  border-bottom: 1px solid var(--default-color) !important;
 }
 </style>

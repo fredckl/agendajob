@@ -2,8 +2,39 @@
 @import "node_modules/bootstrap-vue/src/index.scss";
 @import "~toastr";
 @import url("https://fonts.googleapis.com/css2?family=Cedarville+Cursive&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,100;1,400&display=swap");
+
+$default-color: rgb(199, 37, 37);
+
+html,
+body {
+  font-family: "Roboto", sans-serif;
+}
+
+a,
+button {
+  --default-color: rgb(199, 37, 37);
+}
+
+.btn:focus {
+  box-shadow: none;
+}
+
+a:hover {
+  color: var(--default-color);
+}
 
 h1 {
   font-size: 1.5rem;
   color: #444;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.btn-default {
+  color: #fff;
+  background-color: $default-color;
+  border-color: $default-color;
 }

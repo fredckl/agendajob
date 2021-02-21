@@ -9,7 +9,7 @@
               <br />
               Ce que vous faites ici vous appartient en intégralité. 
               <br />
-              En revanche, effacer les données de votre navigateur peu vous faire perdre vos candidatures enregistrées sur ce site. 
+              En revanche, effacer les données de votre navigateur peut vous faire perdre vos candidatures enregistrées sur ce site. 
               <br />
               C'est pourquoi nous avons mis en place un outil qui vous permet d'exporter et d'importer vos données.
             </p>

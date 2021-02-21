@@ -60,7 +60,7 @@
     <div class="row">
       <div class="col">
         <div class="pull-right">
-          <button type="submit" class="btn btn-primary btn-sm">Sauvegarder</button>
+          <button type="submit" class="btn btn-default btn-sm">Sauvegarder</button>
         </div>
       </div>
     </div>
