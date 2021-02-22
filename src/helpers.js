@@ -13,3 +13,16 @@ export const getParsedItem = (key, defaultValue) => compose(
 export const setStringifyItem = (key, value) => setItem(key, JSON.stringify(value)); 
 
 export const timestampToDate = ts => new Date(ts * 1000);
+
+
+export const debounce = (callback, delay) => {
+  let timer;
+  return function () {
+    const args = arguments;
+    const context = this;
+    clearTimeout(timer);
+    timer = setTimeout(function(){
+        callback.apply(context, args);
+    }, delay)
+  }
+}

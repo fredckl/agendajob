@@ -33,15 +33,13 @@
       </div>
     </div>
     <div class="row mb-3">
+      <div class="col-6 d-flex align-items-center">
+        <label for="color" class="form-label mr-2">Couleur d'étiquette</label>
+        <v-input-colorpicker id="color" name="color" v-model="form.color" />
+      </div>  
       <div class="col-6">
         <div class="form-group">
-          <label for="note" class="form-label">Note personnelle</label>
-          <textarea v-model="form.note" id="note" name="note" class="form-control"></textarea>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="form-group">
-          <label for="date" class="form-label">Date de l'offre</label>
+          <label for="date" class="form-label">Candidature envoyée le </label>
           <b-form-datepicker 
             id="date" 
             v-model="form.date" 
@@ -52,9 +50,21 @@
       </div>
     </div>
     <div class="row mb-3">
-      <div class="col d-flex align-items-center">
-        <label for="color" class="form-label mr-2">Couleur d'étiquette</label>
-        <v-input-colorpicker id="color" name="color" v-model="form.color" />
+      <div class="col-6">
+        <div class="form-group">
+          <label for="note" class="form-label">Note personnelle</label>
+          <textarea 
+            :value="form.note" 
+            @input="updateNote"
+            ref="noteInput" 
+            id="note"
+            name="note" 
+            class="form-control note-input"></textarea>
+            <p class="text-muted font-italic">Vous pouvez utiliser la syntax <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" target="_blank">markdown</a></p>
+        </div>
+      </div>
+      <div class="col-6 d-flex align-items-stretch">
+        <div class="note-markdown" v-html="noteCompiledMarkdown"></div>
       </div>
     </div>
     <div class="row">
@@ -75,8 +85,12 @@ import moment from 'moment';
 import { COLOR_DEFAULT } from '../constants';
 import Ajv from 'ajv'
 import { job as jobSchema } from '../validator/jobs';
+import MarkdownIt from 'markdown-it';
+import { pathOr } from 'rambda';
+import { debounce } from '../helpers';
 const ajv = new Ajv();
 const validate = ajv.compile(jobSchema);
+const md = new MarkdownIt();
 
 const getDefaultValue = () => ({
   company: null,
@@ -85,7 +99,9 @@ const getDefaultValue = () => ({
   url: null,
   color: COLOR_DEFAULT,
   id: uuidv4()
-})
+});
+
+
 export default {
   name: 'form-job',
   props: ['job'],
@@ -105,7 +121,19 @@ export default {
       }
     }
   },
+  computed: {
+    noteCompiledMarkdown () {
+      return md.render(pathOr('', ['form', 'note'], this));
+    }
+  },
   methods: {
+    updateNote: debounce(function ({ target: { value }}) {
+      this.$set(this.form, 'note', value);
+      if (this.$refs.noteInput) {
+        const height = this.$refs.noteInput.scrollHeight
+        this.$refs.noteInput.style.height = height + 'px';
+      }
+    }, 300),
     validateState(item) {
       const { $dirty, $error } = item
       return $dirty ? !$error : null
@@ -134,3 +162,18 @@ export default {
   }
 }
 </script>
+
+<style scoped lang="scss">
+.note-input {
+  transition: all .3s;
+  min-height: 200px;
+}
+.note-markdown {
+  border: solid 1px #ced4da;
+  margin-top: 1.9rem;
+  margin-bottom: 2.5rem;
+  border-radius: 4px;
+  width: 100%;
+  padding: .5rem;
+}
+</style>
