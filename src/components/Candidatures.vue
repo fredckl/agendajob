@@ -14,7 +14,7 @@
         </div>
       </div>
       <candidature 
-        v-for="job in jobs" 
+        v-for="job in allJobs" 
         :key="job.id" 
         :job="job"
         @onRemove="confirmRemove"
@@ -34,7 +34,6 @@ import Candidature  from './Candidature.vue'
 import SearchCandidatures  from './SearchCandidatures.vue'
 import Confirm from './Confirm.vue';
 import {
-    
     compose,
     filter,
     includes,
@@ -95,8 +94,8 @@ export default {
           toLatinise,
           join(' '),
           paths([['company'], ['note']])
-        ))(this.originalJobs)
-
+        ))(this.jobs)
+  
       this.$set(this, 'allJobs', jobsFiltered);
       this.$set(this, 'isSearched', true);
     }

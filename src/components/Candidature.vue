@@ -5,7 +5,7 @@
       <div class="text-right font-weight-light text-muted"><small>{{candidatureDate}}</small></div>
     </div>
     <div class="card-body">
-      <p>{{job.note}}</p>
+      <div v-html="noteCompiledMarkdown"></div>
       <a v-if="job.url" :href="job.url" class="text-muted" target="_blank">{{job.url}}</a>
     </div>
     <div class="card-footer">
@@ -23,6 +23,8 @@
 import moment from 'moment';
 import { COLOR_DEFAULT, DATE_FR } from '../constants';
 import { timestampToDate } from '../helpers';
+import MarkdownIt from 'markdown-it';
+const md = new MarkdownIt();
 
 export default {
   name: "candidature",
@@ -41,6 +43,9 @@ export default {
         borderColor: this.job.color,
         boxShadow: `0 0 4px ${this.job.color}`
       }
+    },
+    noteCompiledMarkdown () {
+      return md.render(this.job.note || '');
     }
   }
 }
