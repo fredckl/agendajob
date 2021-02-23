@@ -84,13 +84,12 @@ import toastr from 'toastr';
 import moment from 'moment';
 import { COLOR_DEFAULT } from '../constants';
 import Ajv from 'ajv'
-import { job as jobSchema } from '../validator/jobs';
-import MarkdownIt from 'markdown-it';
+import { job as jobSchema } from '../validator/jobs'
 import { pathOr } from 'rambda';
-import { debounce } from '../helpers';
+import { debounce, getMarkdown } from '../helpers';
 const ajv = new Ajv();
 const validate = ajv.compile(jobSchema);
-const md = new MarkdownIt();
+const md = getMarkdown();
 
 const getDefaultValue = () => ({
   company: null,

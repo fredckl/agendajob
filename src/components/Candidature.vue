@@ -22,9 +22,8 @@
 <script>
 import moment from 'moment';
 import { COLOR_DEFAULT, DATE_FR } from '../constants';
-import { timestampToDate } from '../helpers';
-import MarkdownIt from 'markdown-it';
-const md = new MarkdownIt();
+import { timestampToDate, getMarkdown } from '../helpers';
+const md = getMarkdown();
 
 export default {
   name: "candidature",
